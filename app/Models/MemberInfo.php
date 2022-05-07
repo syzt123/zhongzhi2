@@ -134,4 +134,14 @@ class MemberInfo extends Model
         return self::with([])->where("id", '=', $uId)
             ->decrement('gold', $gold);
     }
+
+    // 新增或更新用户信息根基手机号
+    static function updateUserInfoByTel($tel, $data = []): int
+    {
+        $model = self::with([])->where("tel", '=', $tel);
+        if (count($data) != 0) {
+            return $model->update($data);
+        }
+        return 0;
+    }
 }

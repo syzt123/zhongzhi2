@@ -34,7 +34,7 @@ class UserController extends Controller
      *     @OA\Parameter(name="nickname", in="query", @OA\Schema(type="string"),description="用户昵称"),
      *     @OA\Parameter(name="passwd", in="query", @OA\Schema(type="string"),description="注册密码 如果不填则默认密码：12345678"),
      *     @OA\Parameter(name="confirm_passwd", in="query", @OA\Schema(type="string"),description="确认密码 当注册密码不填写，非必须"),
-     *     @OA\Parameter(name="head_img", in="query", @OA\Schema(type="string"),description="用户头像 非必须"),
+     *     @OA\Parameter(name="code", in="query", @OA\Schema(type="string"),description="手机号接收的验证码 必须"),
      *     @OA\Response(response=200, description="  {code: 200, msg:string, data:[]}  "),
      *    )
      */
@@ -57,6 +57,14 @@ class UserController extends Controller
         }
         if (!isset($request->nickname)) {
             return $this->backArr('用户昵称必须', config("comm_code.code.fail"), []);
+        }
+        if (!isset($request->code)) {
+            return $this->backArr('请输入验证码', config("comm_code.code.fail"), []);
+        }
+        //获取缓存
+        $telCode = Redis::get($this->telCodeRule($request->tel));
+        if ($request->code !== $telCode) {
+            return $this->backArr('输入的验证码错误，请重试！', config("comm_code.code.fail"), []);
         }
 
         if (isset($request->passwd)) {
@@ -221,7 +229,7 @@ class UserController extends Controller
      *     path="/api/v1/user/updateUserInfo",
      *     tags={"用户管理"},
      *     summary="更新用户信息",
-     *     description="更新用户信息头像或用户地址/用户昵称(2022/03/30日完)",
+     *     description="更新用户信息头像或用户地址/用户昵称/登录密码(2022/03/30日完)",
      *     @OA\Parameter(name="token", in="header", @OA\Schema(type="string"),description="header头token"),
      *     @OA\Parameter (name="head_img", in="query", @OA\Schema (type="string"),description="用户头像地址 *非必须字段"),
      *     @OA\Parameter (name="user_address", in="query", @OA\Schema (type="string"),description="用户收获地址 *非必须字段"),
@@ -667,4 +675,68 @@ class UserController extends Controller
         $lists = MemberVegetableService::getMemberVegetableList($userInfo["id"], $data);
         return $this->backArr('获取列表成功', config("comm_code.code.ok"), $lists);
     }
+
+    /**
+     * @OA\Post (
+     *     path="/api/v1/user/resetPasswd",
+     *     tags={"用户管理",},
+     *     summary="用户根据手机号找回密码",
+     *     description="找回密码(2022/05/22日完)",
+     *     @OA\Parameter(name="tel", in="query", @OA\Schema(type="string"),description="手机号"),
+     *     @OA\Parameter(name="code", in="query", @OA\Schema(type="string"),description="手机号接收的验证码 必须"),
+     *     @OA\Parameter(name="passwd", in="query", @OA\Schema(type="string"),description="重新设置密码 必须"),
+     *     @OA\Parameter(name="confirm_passwd", in="query", @OA\Schema(type="string"),description="确认密码 必须"),
+     *     @OA\Response(response=200, description="  {code: 200, msg:string, data:[]}  "),
+     *    )
+     */
+    function resetPasswd(Request $request): array
+    {
+        if (!$request->isMethod('post')) {
+            return $this->backArr('请求方式必须为post', config("comm_code.code.fail"), []);
+        }
+        //校验
+        if (!isset($request->tel)) {
+            return $this->backArr('手机号必须', config("comm_code.code.fail"), []);
+        }
+        if (!$this->checkPhone($request->tel)) {
+            return $this->backArr('手机号格式错误', config("comm_code.code.fail"), []);
+        }
+        //手机号是否被注册
+        $rs = MemberInfoService::LoginUser(["tel" => $request->tel]);
+        if (!count($rs)) {
+            return $this->backArr('当前手机号尚未注册，不能进行密码找回，请注册！', config("comm_code.code.fail"), []);
+        }
+        if (!isset($request->code)) {
+            return $this->backArr('请输入验证码', config("comm_code.code.fail"), []);
+        }
+        //获取缓存
+        $telCode = Redis::get($this->telCodeRule($request->tel));
+        if ($request->code !== $telCode) {
+            return $this->backArr('输入的验证码错误，请重试！', config("comm_code.code.fail"), []);
+        }
+
+        if (!isset($request->passwd)) {
+            return $this->backArr('密码必须！', config("comm_code.code.fail"), []);
+        }
+        if (isset($request->passwd)) {
+            if (!isset($request->confirm_passwd)) {
+                return $this->backArr('确认密码必须', config("comm_code.code.fail"), []);
+            }
+            if (strlen($request->passwd) < 8) {
+                return $this->backArr('密码长度不能小于8位！', config("comm_code.code.fail"), []);
+            }
+            if ($request->passwd != $request->confirm_passwd) {
+                return $this->backArr('确认密码与输入密码不一致，请重试！', config("comm_code.code.fail"), []);
+            }
+        }
+        $data = [
+            "password" => isset($request->passwd) ? md5(trim($request->passwd)) : md5("12345678"),
+        ];
+        $bool = MemberInfoService::updateUserInfoByTel($request->tel, $data);
+        if ($bool) {
+            return $this->backArr('重新设置密码成功！', config("comm_code.code.ok"), []);
+        }
+        return $this->backArr('重新设置密码失败', config("comm_code.code.fail"), []);
+    }
+
 }

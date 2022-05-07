@@ -17,6 +17,7 @@ use \App\Http\Controllers\Api\V1\PayDemoController;
 use \App\Http\Controllers\Api\V1\Ys\YsController;
 use \App\Http\Controllers\Api\V1\TencentVodController;
 use \App\Http\Controllers\Api\V1\PlatformController;
+use \App\Http\Controllers\Api\V1\Tencent\SmsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,11 @@ Route::prefix("v1")->group(function () {
     });
     Route::prefix("vod")->group(function () {
         Route::post('/getSign', [TencentVodController::class, 'getSign']);//腾讯云点播签名
+    });
+
+
+    Route::prefix("tencent")->group(function () {//腾讯云短信
+        Route::post('/sendSms', [SmsController::class, 'sendSms']);//发送短信
     });
 
 
@@ -116,8 +122,8 @@ Route::middleware("check.token")->prefix("v1")->group(function () {
         Route::post('/userExchangeLogList', [UserExchangeLogController::class, 'userExchangeLogList']);//获取用户兑换的蔬菜列表
         //获取用户的兑换蔬菜详情
         Route::get('/userDetailExchangeLog/{id}', [UserExchangeLogController::class, 'userDetailExchangeLog']);//获取用户兑换的蔬菜详情
-
-
+        //用户找回密码通过验证码 重置密码
+        Route::get('/resetPasswd', [UserController::class, 'resetPasswd']);//重置
     });
 
     //平台数据

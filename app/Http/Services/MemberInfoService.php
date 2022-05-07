@@ -69,6 +69,16 @@ class MemberInfoService extends BaseService
         }
         return 1;
     }
+    // 更新用户信息根据手机号
+    static function updateUserInfoByTel($tel, $data = []): int
+    {
+
+        // 更新用户密码
+        if (isset($data["password"]) && trim($data["password"]) != '') {
+            MemberInfo::updateUserInfoByTel($tel, ["password" => $data["password"]]);
+        }
+        return 1;
+    }
 
     // 自增长
     static function increaseVegetableNums($uId, $nums = 1): int

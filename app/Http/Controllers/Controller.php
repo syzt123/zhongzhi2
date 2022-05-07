@@ -276,4 +276,10 @@ class Controller extends BaseController
         }
         return 0;
     }
+
+    // 手机号验证码规则
+    function telCodeRule($tel = ''): string
+    {
+        return config("comm_code.tencent_vod.sms.sms_code") . (string)$tel;
+    }
 }
