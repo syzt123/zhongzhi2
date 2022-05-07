@@ -85,7 +85,11 @@ class MemberVegetable extends Model
     // 查询
     static function getMemberVegetableList($uId, $data = []): array
     {
-        $lists = self::with(["vegetableLand", "user", "vegetableType"])->where("nums", '>', 0);;
+        $lists = self::with(["vegetableLand", "user", "vegetableType", /*"vegetableNumber" => function ($q) use ($uId) {
+            if ($uId !== null) {
+                $q->where("m_id", $uId);
+            }
+        }*/])->where("nums", '>', 0);;
 
         if ($uId === null) {
             $lists = $lists->whereNull("m_id");// 平台的蔬菜
@@ -250,4 +254,9 @@ class MemberVegetable extends Model
         return 0;
     }
 
+    // 关联vegetableNumber
+    function vegetableNumber()
+    {
+        return $this->hasMany(VegetableNumber::class, 'land_id')->whereNotNull(["m_id"]);
+    }
 }

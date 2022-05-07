@@ -37,7 +37,7 @@
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     {field: 'id', min: 80, title: 'ID', sort: true}
-                    , {field: 'monitor', min: 80, title: '摄像头地址'}
+                    , {field: 'name', min: 80, title: '名称'}
                     , {field: 'v_num', min: 80, title: '种植量'}
                     , {
                         field: 'tx_video_url', title: '腾讯点播视频', width: 200, templet: '#txVideoUrl',

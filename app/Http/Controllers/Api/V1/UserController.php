@@ -9,6 +9,7 @@ use App\Http\Services\ExchangeLogService;
 use App\Http\Services\MemberInfoService;
 use App\Http\Services\MemberVegetableService;
 use App\Http\Services\PaymentOrderService;
+use App\Http\Services\VegetableNumberService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -539,6 +540,7 @@ class UserController extends Controller
      *                      @OA\Property(property="storage_time", type="int", description="可以存放的时间"),
      *                      @OA\Property(property="create_time", type="int", description="创建时间"),
      *                      @OA\Property(property="update_time", type="int", description="更新时间"),
+     *                      @OA\Property(property="vegetable_number_name", type="string", description="用户种植蔬菜的编号名 即对应的土地编号 当用户种植后改字段才有值，默认空"),
      *                      @OA\Property(property="vegetable_type", type="array", description="蔬菜名信息",
      *                          @OA\Items(
      *                              @OA\Property(property="id", type="int", description="主键id"),
@@ -566,6 +568,10 @@ class UserController extends Controller
         if (count($lists["list"]) <= 0) {
             return $this->backArr('详情不存在，请重试！', config("comm_code.code.fail"), []);
         }
+        $queryData = ["land_id" => $lists["list"][0]["land"], "m_id" => $userInfo["id"]];
+        // 查询土地蔬菜编号
+        $vegetableNumberInfo = VegetableNumberService::findVegetableNumberInfoById(null, $queryData);
+        $lists["list"][0]["vegetable_number_name"] = count($vegetableNumberInfo) ? $vegetableNumberInfo["number"] : '';
         return $this->backArr('获取详情成功', config("comm_code.code.ok"), $lists["list"][0]);
     }
 

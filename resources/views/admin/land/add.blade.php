@@ -57,7 +57,7 @@
             <label class="layui-form-label">腾讯云点播url</label>
             <div class="layui-input-block">
                 <input type="text" name="tx_video_url" id="tx_video_url" style="background: #cccccc" autocomplete="off"
-                       lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
+                       lay-verify="required" lay-reqtext="腾讯云点播url是必填项，岂能为空？"
                        placeholder="点击上传视频文件即自动填充" readonly class="layui-input">
             </div>
         </div>
@@ -65,7 +65,7 @@
             <label class="layui-form-label">腾讯云文件ID</label>
             <div class="layui-input-block">
                 <input type="text" name="tx_video_id" id="tx_video_id" style="background: #cccccc" autocomplete="off"
-                       lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
+                       lay-verify="required" lay-reqtext="腾讯云文件ID是必填项，岂能为空？"
                        placeholder="点击上传视频文件即自动填充" readonly class="layui-input">
             </div>
         </div>

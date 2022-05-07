@@ -5,25 +5,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-//土地蔬菜表
-class VegetableLand extends Model
+//土地蔬菜编号表
+class VegetableNumber extends Model
 {
-    protected $table = 'vegetable_land';
+    protected $table = 'vegetable_number';
     protected $dateFormat = 'U';
 
     const CREATED_AT = 'create_time';
     const UPDATED_AT = null;
 
     // 新增
-    static function addVegetableLand($data): int
+    static function addVegetableNumber($data): int
     {
         return self::with([])->insertGetId($data);
     }
 
     // 查询
-    static function getVegetableLandList($data = []): array
+    static function getVegetableNumberList($data = []): array
     {
-        $lists = self::with(["vegetableNumber"]);
+        $lists = self::with([]);
         $page = 1;
         $pageSize = 10;
         $sort = 'desc';// desc asc
@@ -48,7 +48,7 @@ class VegetableLand extends Model
     }
 
     // 删除
-    static function delVegetableLand($id, $data = []): int
+    static function delVegetableNumber($id, $data = []): int
     {
         $model = self::with([])->where("id", $id);
         if (count($data)) {
@@ -58,17 +58,20 @@ class VegetableLand extends Model
     }
 
     // 总数
-    static function getVegetableLandNumsByUId(): int
+    static function getVegetableNumberNumsByUId(): int
     {
         $model = self::with([]);
         return $model->count();
     }
 
 
-    // 查询根据id
-    static function findVegetableLandInfoById($id, $data = []): array
+    // 查询根据id或者条件
+    static function findVegetableNumberInfoById($id, $data = []): array
     {
-        $model = self::with(["vegetableNumber"])->where("id", $id);
+        $model = self::with([]);
+        if ($id != null){
+            $model = $model->where("id", $id);
+        }
         if (count($data)) {
             $model = $model->where($data);
         }
@@ -77,9 +80,5 @@ class VegetableLand extends Model
             return $rs->toArray();
         }
         return [];
-    }
-    // 关联vegetableNumber
-    function vegetableNumber(){
-        return $this->hasMany(VegetableNumber::class, 'land_id')->whereNull(["m_id"]);
     }
 }
