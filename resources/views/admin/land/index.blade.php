@@ -16,6 +16,8 @@
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="catNumber">查看编号</a>
+
 </script>
 <script type="text/html" id="txVideoUrl">
     <a class="layui-btn layui-btn-xs" lay-event="getVideoUrl">查看视频</a>
@@ -23,7 +25,6 @@
 @section('js')
 
 
-    //JS
     <script>
         //JS
         layui.use(['table', 'layer'], function () {
@@ -43,7 +44,7 @@
                         field: 'tx_video_url', title: '腾讯点播视频', width: 200, templet: '#txVideoUrl',
                     }
                     , {field: 'l_status', min: 80, title: '状态'}
-                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 200}
                 ]]
                 , parseData: function (res) { //res 即为原始返回的数据
                     // console.log(res)
@@ -128,6 +129,46 @@
                     });
                 } else if (obj.event === 'edit') {
                     window.location = "{{ url('admin/land/edit/id') }}".replace(/id/, data.id);
+                } else if (obj.event === 'catNumber') {
+                    {{--layer.open({--}}
+                    {{--    type: 1,--}}
+                    {{--    area: ["900px", "500px"],--}}
+                    {{--    title: "土地编号列表",--}}
+                    {{--    content:'<table class="layui-hide" id="test2" lay-filter="test2"></table>',--}}
+                    {{--    success: function () {--}}
+                    {{--        table.render(--}}
+                    {{--            {--}}
+                    {{--                elem: '#test2'--}}
+                    {{--                , url: "{{ url('admin/number/data/land_id') }}".replace(/land_id/, data.id)--}}
+                    {{--                , toolbar: '#toolbarDemo2' //开启头部工具栏，并为其绑定左侧模板--}}
+                    {{--                , page: true //开启分页--}}
+                    {{--                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增--}}
+                    {{--                , cols: [[--}}
+                    {{--                    {field: 'id', min: 80, title: 'ID', sort: true}--}}
+                    {{--                    , {field: 'number', min: 80, title: '土地名称'}--}}
+                    {{--                    , {field: 'number', min: 80, title: '土地编号名称'}--}}
+                    {{--                    , {field: 'number', min: 80, title: '用户名称'}--}}
+                    {{--                    , {field: 'l_status', min: 80, title: '状态'}--}}
+                    {{--                    //, {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}--}}
+                    {{--                ]]--}}
+                    {{--                , parseData: function (res) { //res 即为原始返回的数据--}}
+                    {{--                    return {--}}
+                    {{--                        "code": !res.code, //解析接口状态--}}
+                    {{--                        "msg": res.message, //解析提示文本--}}
+                    {{--                        "count": res.data.total, //解析数据长度--}}
+                    {{--                        "data": res.data.data //解析数据列表--}}
+                    {{--                    };--}}
+                    {{--                }--}}
+                    {{--            }--}}
+                    {{--        )--}}
+                    {{--    }--}}
+                    {{--})--}}
+                    layer.open({
+                        type: 2,
+                        area: ["900px", "500px"],
+                        title: "土地编号列表",
+                        content:"{{ url('admin/number/') }}"+"/"+data.id,
+                    })
                 } else if (obj.event === 'getVideoUrl') {
                     var videoUrl = '<video width="100%" height="100%"  controls="controls" autobuffer="autobuffer" ><source src="' + data.tx_video_url + '"type="video/mp4"></source></video>';
                     layer.open({

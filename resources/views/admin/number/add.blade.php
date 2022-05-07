@@ -8,35 +8,17 @@
 
 @section('content')
     <blockquote class="layui-elem-quote layui-text">
-        土地管理
+        土地编号管理
     </blockquote>
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend>添加土地</legend>
+        <legend>添加土地编号</legend>
     </fieldset>
-    <form class="layui-form" action="" id="addLandForm">
-        {{--<div class="layui-form-item">
-            <label class="layui-form-label">摄像头设备号</label>
-            <div class="layui-input-block">
-                <input type="text" name="device_serial" autocomplete="off" lay-verify="required"
-                       lay-reqtext="摄像头设备号是必填项，岂能为空？"
-                       placeholder="请输入 如J38620611" class="layui-input">
-            </div>
-            <div class="layui-input-block">
-                <button type="button" onclick="getLiveAddress()">获取直播地址</button>
-            </div>
-        </div>--}}
-        {{--<div class="layui-form-item">
-            <label class="layui-form-label">摄像头地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="monitor" autocomplete="off" lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
-                       placeholder="请输入" class="layui-input">
-            </div>
-        </div>--}}
+    <form class="layui-form" action="" id="addnumberForm">
         <div class="layui-form-item">
-            <label class="layui-form-label">土地名称</label>
+            <label class="layui-form-label">土地编号名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" lay-verify="required" lay-reqtext="土地名称是必填项，岂能为空？"
+                <input type="text" name="name" lay-verify="required" lay-reqtext="土地编号名称是必填项，岂能为空？"
                        placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -198,6 +180,7 @@
 
     </script>
 
+    //JS
     <script>
 
         //JS
@@ -225,7 +208,7 @@
             form.on('submit(demo1)', function (data) {
                 // console.log(data.field)
                 $.ajax({
-                    url: "{{url("admin/land/add/submit")}}"
+                    url: "{{url("admin/number/add/submit")}}"
                     , data: data.field
                     , type: "post"
                     , headers: {
@@ -236,9 +219,9 @@
                             layer.confirm('操作成功', {
                                 btn: ['返回', '继续添加'] //按钮
                             }, function () {
-                                window.location = "{{url('admin/land')}}"
+                                window.location = "{{url('admin/number')}}"
                             }, function () {
-                                $("#addLandForm")[0].reset();
+                                $("#addnumberForm")[0].reset();
                                 layui.form.render();
                                 layer.close();
                             });
