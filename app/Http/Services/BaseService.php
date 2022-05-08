@@ -29,17 +29,26 @@ class BaseService
     }
 
 
-    static function getPageDataListByAdmin($join = [])
+    static function getPageDataListByAdmin($data = [], $join = [])
     {
         if (class_exists(get_called_class())) {
             $model = "App\Models\Admin\\" . str_replace("Service", '', (new \ReflectionClass(get_called_class()))->getShortName());
             if (class_exists($model)) {
+                if ('App\Models\Admin\VegetableNumber' === $model){
+                    $model = $model::with(["user", "land"]);
+                }else{
+                    $model = $model::with([]);
+                }
+                if (count($data)) {
+                    $model = $model->where($data);
+                }
                 if (!empty($join)) {
                     $table = (new $model())->getTable();
-                    return $model::join('member_info', $join['foreign_key'], '=', "{$join['table']}.id", $join['type'] ?? "inner")
-                        ->paginate(Request::input('limit'), $join['field'] ?? "*");
+                    return $model->join('member_info', $join['foreign_key'], '=', "{$join['table']}.id", $join['type'] ?? "inner")
+                        ->orderBy("id", "desc")->paginate(Request::input('limit'), $join['field'] ?? "*");
                 }
-                return $model::paginate(Request::input('limit'));
+                $model = $model->orderBy("id", "desc");
+                return $model->paginate(Request::input('limit'));
             }
         }
         return false;
@@ -101,4 +110,5 @@ class BaseService
         return false;
 
     }
+
 }

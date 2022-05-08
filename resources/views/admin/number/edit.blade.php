@@ -1,6 +1,5 @@
 @extends('admin.layout.base')
 
-
 @section('sidebar')
     @parent
 
@@ -8,42 +7,31 @@
 
 @section('content')
     <blockquote class="layui-elem-quote layui-text">
-        土地管理
+        土地编号管理
     </blockquote>
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend>添加土地</legend>
+        <legend>编辑土地编号</legend>
     </fieldset>
-    <form class="layui-form" action="" id="addLandForm">
-        {{--<div class="layui-form-item">
-            <label class="layui-form-label">摄像头设备号</label>
-            <div class="layui-input-block">
-                <input type="text" name="device_serial" autocomplete="off" lay-verify="required"
-                       lay-reqtext="摄像头设备号是必填项，岂能为空？"
-                       placeholder="请输入 如J38620611" class="layui-input">
-            </div>
-            <div class="layui-input-block">
-                <button type="button" onclick="getLiveAddress()">获取直播地址</button>
-            </div>
-        </div>--}}
+    <form class="layui-form" action="" id="addnumberForm">
         {{--<div class="layui-form-item">
             <label class="layui-form-label">摄像头地址</label>
             <div class="layui-input-block">
-                <input type="text" name="monitor" autocomplete="off" lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
+                <input type="text" name="monitor" value="{{$number->monitor}}" autocomplete="off" lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
                        placeholder="请输入" class="layui-input">
             </div>
         </div>--}}
         <div class="layui-form-item">
-            <label class="layui-form-label">土地名称</label>
+            <label class="layui-form-label">土地编号名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" lay-verify="required" lay-reqtext="土地名称是必填项，岂能为空？"
+                <input type="text" name="name" lay-verify="required" value="{{$number->name}}"  lay-reqtext="土地编号名称是必填项，岂能为空？"
                        placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">可种植的蔬菜量</label>
             <div class="layui-input-block">
-                <input type="number" name="v_num" lay-verify="required" lay-reqtext="可种植的蔬菜量是必填项，岂能为空？"
+                <input type="number" name="v_num" value="{{$number->v_num}}" lay-verify="required" lay-reqtext="可种植的蔬菜量是必填项，岂能为空？"
                        placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -56,25 +44,22 @@
         <div class="layui-form-item">
             <label class="layui-form-label">腾讯云点播url</label>
             <div class="layui-input-block">
-                <input type="text" name="tx_video_url" id="tx_video_url" style="background: #cccccc" autocomplete="off"
-                       lay-verify="required" lay-reqtext="腾讯云点播url是必填项，岂能为空？"
-                       placeholder="点击上传视频文件即自动填充" readonly class="layui-input">
+                <input type="text" name="tx_video_url" id="tx_video_url" value="{{$number->tx_video_url}}" style="background: #cccccc" autocomplete="off" lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
+                       placeholder="点击上传视频文件即自动填充"  readonly class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">腾讯云文件ID</label>
             <div class="layui-input-block">
-                <input type="text" name="tx_video_id" id="tx_video_id" style="background: #cccccc" autocomplete="off"
-                       lay-verify="required" lay-reqtext="腾讯云文件ID是必填项，岂能为空？"
+                <input type="text" name="tx_video_id" id="tx_video_id" value="{{$number->tx_video_id}}" style="background: #cccccc" autocomplete="off" lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
                        placeholder="点击上传视频文件即自动填充" readonly class="layui-input">
             </div>
         </div>
 
-
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
-                <input type="radio" name="l_status" value="0" title="未使用" checked="">
+                <input type="radio" name="l_status" value="0" title="未使用">
                 <input type="radio" name="l_status" value="1" title="已使用">
                 <input type="radio" name="l_status" value="2" title="其他">
             </div>
@@ -86,22 +71,9 @@
             </div>
         </div>
     </form>
-
-    {{-- <div class="layui-input-block">
-         <button id="getVideoUrl">获取视频播放地址</button>
-     </div>--}}
-
-
-    {{--<div class="layui-form-item">
-        <label class="layui-form-label">腾讯云点播封面图</label>
-        <div class="layui-input-block">
-            <input type="text" name="cover_url" id="cover_url" autocomplete="off" lay-verify="required" lay-reqtext="摄像头地址是必填项，岂能为空？"
-                   placeholder="请输入" class="layui-input">
-        </div>
-    </div>--}}
-
 @endsection
 @section('js')
+
     <script src="https://cdn-go.cn/cdn/vod-js-sdk-v6/latest/vod-js-sdk-v6.js"></script>
     <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -135,7 +107,6 @@
          * @param rs
          */
         var uploaderInfos = [];
-
         function vExampleUpload(rs) {
             // new 新对象
             var tcInstance = new TcVod.default({
@@ -189,6 +160,7 @@
             })
 
 
+
             // rs.reset()
             console.log('执行完')
         }
@@ -198,56 +170,43 @@
 
     </script>
 
+    //JS
     <script>
-
         //JS
         layui.use(['form'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , $ = layui.$ //重点处;
-
-
-            $("#getVideoUrl").click(function () {
-                /*layer.open({
-                    type: 2,
-                    title: '上传',
-                    //closeBtn: 0,
-                    shadeClose: true,
-                    //skin: 'yourclass',
-                    content: 'https://pay.zjzc88.com/upload.html',
-                    area: ['700px', '500px']
-                });*/
-            })
-            //页面层-自定义
-
-
+            $("input[name=l_status][title={{$number->l_status}}]").prop("checked","false");
+            form.render();
+            // $("input[name=l_status][value=1]").prop("checked","true");
             //监听提交
             form.on('submit(demo1)', function (data) {
                 // console.log(data.field)
+                data.field.id = "{{$number->id}}"
                 $.ajax({
-                    url: "{{url("admin/land/add/submit")}}"
+                    url: "{{url("admin/number/edit/submit")}}"
                     , data: data.field
-                    , type: "post"
+                    , type: "put"
                     , headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     }
                     , success: function (res) {
-                        if (res.code) {
+                        if(res.code)
+                        {
                             layer.confirm('操作成功', {
-                                btn: ['返回', '继续添加'] //按钮
-                            }, function () {
-                                window.location = "{{url('admin/land')}}"
-                            }, function () {
-                                $("#addLandForm")[0].reset();
-                                layui.form.render();
+                                btn: ['返回','确认'] //按钮
+                            }, function(){
+                                window.location = "{{url('admin/number')}}"
+                            }, function(){
                                 layer.close();
                             });
-                        } else {
+                        }else {
                             layer.msg(res.message)
                         }
 
                     },
-                    error: function (data) {
+                    error:function(data){
                         layer.alert(JSON.stringify(data), {
                             title: data
                         });

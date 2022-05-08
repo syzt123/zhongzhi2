@@ -83,6 +83,15 @@ Route::group(['prefix'=>'admin'],function(){
         Route::put('/distribution',[EditDistribution::class,"index"])->middleware('admin');
         Route::get('/distribution/data/{page?}/{limit?}',[Distribution::class,"data"])->middleware('admin');
     });
+    Route::group(['prefix'=>'number'],function(){
+        Route::get('/{land_id}/{page?}/{limit?}',[App\Http\Controllers\Admin\Number\IndexController::class,"index"])->middleware('admin');
+        Route::get('/data/{land_id?}/{page?}/{limit?}',[App\Http\Controllers\Admin\Number\IndexController::class,"data"])->middleware('admin');
+       /* Route::get('add',[AddLand::class,'index'])->middleware('admin');
+        Route::post('add/submit',[AddLand::class,'submit'])->middleware('admin');
+        Route::get('edit/{id}',[EditLand::class,'index'])->middleware('admin');
+        Route::put('edit/submit',[EditLand::class,'submit'])->middleware('admin');
+        Route::delete('del/{id}',[DelLand::class,'index'])->middleware('admin');
+    */});
 
 
 });
